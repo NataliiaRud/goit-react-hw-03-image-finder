@@ -1,3 +1,4 @@
+import { LoaderContainer } from './Loader.styled';
 export const Loader = () => {
-  return <div>Loading...</div>;
+  return <LoaderContainer>Loading...</LoaderContainer>;
 };

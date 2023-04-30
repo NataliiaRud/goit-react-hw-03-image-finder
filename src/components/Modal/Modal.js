@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
-import { Overlay, ModalWindow } from './Modal.styled';
+import { Overlay, ModalContainer } from './Modal.styled';
 
 export class Modal extends Component {
   componentDidMount() {
@@ -28,9 +28,9 @@ export class Modal extends Component {
     const { largeImageURL, tags } = this.props.modalData;
     return createPortal(
       <Overlay onClick={this.onBackdropeClick}>
-        <ModalWindow>
+        <ModalContainer>
           <img src={largeImageURL} alt={tags} />
-        </ModalWindow>
+        </ModalContainer>
       </Overlay>,
       document.querySelector('#modal-root')
     );

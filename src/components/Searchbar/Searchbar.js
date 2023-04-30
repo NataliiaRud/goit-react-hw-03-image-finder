@@ -1,4 +1,13 @@
+import PropTypes from 'prop-types';
+
 import React from 'react';
+import {
+  SearchButton,
+  SearchInput,
+  SearchContainer,
+  SearchForm,
+  ButtonLabel,
+} from './Searchbar.styled';
 
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = e => {
@@ -7,18 +16,21 @@ export const Searchbar = ({ onSubmit }) => {
     e.currentTarget.reset();
   };
   return (
-    <header className="searchbar">
-      <form className="form" onSubmit={handleSubmit}>
-        <button type="submit" className="button">
-          <span className="button-label">Search</span>
-        </button>
+    <SearchContainer className="searchbar">
+      <SearchForm className="form" onSubmit={handleSubmit}>
+        <SearchButton type="submit" className="button">
+          <ButtonLabel className="button-label">Search</ButtonLabel>
+        </SearchButton>
 
-        <input
+        <SearchInput
           className="input"
           type="text"
           placeholder="Search images and photos"
         />
-      </form>
-    </header>
+      </SearchForm>
+    </SearchContainer>
   );
+};
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };

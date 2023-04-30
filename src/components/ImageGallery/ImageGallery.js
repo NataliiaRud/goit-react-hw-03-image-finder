@@ -1,8 +1,13 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getImages } from 'services/api';
 import { Loader } from 'components/Loader/Loader';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { GalleryWrapper } from './ImageGallery.styled';
+import { Button } from 'components/Button/Button';
+import { Modal } from 'components/Modal/Modal';
+
+const ERROR_MSG = 'Something went wrong';
 
 export class ImageGallery extends Component {
   state = {
@@ -40,43 +45,65 @@ export class ImageGallery extends Component {
 
         this.setState({
           images:
-            prevProps.searchTerm === this.props.searchTerm
+            prevProps.searchTerm === this.props.searchTerm &&
+            this.state.page > 1
               ? [...prevState.images, ...res.data.hits]
               : [...res.data.hits],
           status: 'resolved',
+          totalPages: Math.floor(res.data.totalHits / 12),
         });
       } catch (error) {
-        console.log(error);
+        this.setState({ error: ERROR_MSG });
       } finally {
         this.setState({ loading: false });
       }
     }
   }
 
-  onLoadMore = () => {
+  loadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  onModalDisplay = itemModal => {
+    this.setState({ itemModal, isModalShown: true });
+  };
+
+  onModalClose = () => {
+    this.setState({ isModalShown: false });
   };
 
   render() {
     return (
       <>
+        {this.state.status === 'rejected' && (
+          <span>Bad search request! Try again.</span>
+        )}
         {this.state.loading && <Loader />}
+        {this.state.error && <div>{this.state.error}</div>}
         <GalleryWrapper>
           {[...this.state.images].map(item => (
-            <ImageGalleryItem item={item} key={item.id} />
+            <ImageGalleryItem
+              onImageClick={this.onModalDisplay}
+              item={item}
+              key={item.id}
+            />
           ))}
         </GalleryWrapper>
+        {this.state.images.length > 0 &&
+          this.state.status !== 'pending' &&
+          this.state.page <= this.state.totalPages && (
+            <Button onClick={this.loadMore}>Load More</Button>
+          )}
+        {this.state.isModalShown && (
+          <Modal
+            modalData={this.state.itemModal}
+            onModalClose={this.onModalClose}
+          />
+        )}
       </>
     );
   }
 }
-
-// {
-//   [...this.state.images].map(image => (
-//     <ImageGalleryItem
-//       key={image.id}
-//       imageData={image}
-//       onImgClick={this.onModalShow}
-//     ></ImageGalleryItem>
-//   ));
-// }
+ImageGallery.propTypes = {
+  searchTerm: PropTypes.string.isRequired,
+};
