@@ -18,22 +18,7 @@ export class App extends Component {
       this.setState({ searchValue: value })
   };
   
-  // async componentDidUpdate(prevProps, prevState) {
-  //   const { value, page } = this.state;
-  //   if (prevState.searchValue !== this.state.value || prevState.page !== this.state.page) {
-  //     this.setState({ status: 'pending' });
-  //     try {
-  //       const test = await getImages(value, page);
-  //       console.log(test.hits);
-  //       this.setState({ images: test.hits, status: 'resolved' })
-  //     }
-  //     catch (error) {
-  //       this.setState({
-  //         status: 'rejected',
-  //       });
-  //     }
-  //   }
-  // }
+
   render() {
       
       return (<AppContainer>
